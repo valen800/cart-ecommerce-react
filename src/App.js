@@ -7,7 +7,7 @@ import { urlApiProducts, STORAGE_PRODUCT_CART } from "./utils/constants";
 
 function App() {
   const products = useFetch(urlApiProducts, null);
-  const [productsCard, setProductsCard] = useState([]);
+  const [productsCart, setProductsCart] = useState([]);
 
   useEffect(() => {
     getProductsCart();
@@ -18,24 +18,28 @@ function App() {
 
     if (idsProducts) {
       const idsProductsSplit = idsProducts.split(",");
-      setProductsCard(idsProductsSplit);
+      setProductsCart(idsProductsSplit);
     } else {
-      setProductsCard([]);
+      setProductsCart([]);
     }
   };
 
   const addProductCard = (id, name) => {
-    const idsProducts = productsCard;
+    const idsProducts = productsCart;
     idsProducts.push(id);
-    setProductsCard(idsProducts);
-    localStorage.setItem(STORAGE_PRODUCT_CART, productsCard);
-
+    setProductsCart(idsProducts);
+    localStorage.setItem(STORAGE_PRODUCT_CART, productsCart);
+    getProductsCart();
     toast.success(`${name} añadido al carrito correctamente`);
   };
 
   return (
     <div className="App">
-      <TopMenu />
+      <TopMenu
+        productsCart={productsCart}
+        getProductsCart={getProductsCart}
+        products={products}
+      />
       <Products products={products} addProductCard={addProductCard} />
       <ToastContainer
         position="bottom-left"
